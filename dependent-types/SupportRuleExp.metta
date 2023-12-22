@@ -21,8 +21,8 @@
 
 (= (count $pattern)
     (case (match &self (= (refdb) $db) $db)
-        (($db (let $dptrn (fromDeb $pattern) (fromNumber (+ 1 (tuple-count (collapse (match $db $dptrn $dptrn)))))))
-         (%void% (fromNumber 0))))) 
+        (($db (let $dptrn (fromDeb $pattern) (tuple-count (collapse (match $db $dptrn $dptrn)))))
+         (%void% 0)))) 
 
 ; Axiom:
 (: kb (-> Atom))
@@ -39,7 +39,7 @@
     (-> (axiom ($link $x $y))
         (SpecializationOf ($link $x (VarIdx (S Z))) ($link (VarIdx Z) (VarIdx (S Z)))))))
 
-; (: -> (-> Atom Atom Type))
+(: -> (-> Atom Atom Type))
 
 ;; support rule
 (= (support-rule)
