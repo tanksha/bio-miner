@@ -3,28 +3,18 @@
 !(import! &succ succAxiom.metta)
 
 (= (get-witness $x) (: (WitnessOf $x) $x))
-(= (sourcedb) (match &self (= (refdb) $db) (match $db $x (axiom $x))))
 (= (succ-axiom) (match &succ $x $x))
+
+(= (specializations-axiom)
+    (let ($link $a $b) (match &specializations $x $x)
+      (specializationOf ($link $a $b) ($link (VarIdx Z) (VarIdx (S Z))))))
 
 (: -> (-> Atom Atom Atom Type))
 
 (: kb (-> Atom))
-(= (kb) (superpose ((get-witness (sourcedb))
+(= (kb) (superpose ((get-witness (specializations-axiom))
                     (succ-axiom)
                     (: trueaxiom (true)))))
-
-;; Specialization Rule
-(= (specialize-ruleX)
-  (: specilizeX
-    (-> (true)
-        (axiom ($link $x $y))
-        (specializationOf ($link (VarIdx Z) $y) ($link (VarIdx Z) (VarIdx (S Z)))))))
-
-(= (specialize-ruleY)
-  (: specilizeY
-    (-> (true)
-        (axiom ($link $x $y))
-        (specializationOf ($link $x (VarIdx (S Z))) ($link (VarIdx Z) (VarIdx (S Z)))))))
 
 ;; support rule
 (= (support-rule)
@@ -64,9 +54,7 @@
           (surp $ptrn (isurp? ($ptrn $cnt))))))
 
 (: rb (-> Atom))
-(= (rb) (superpose ((specialize-ruleX)
-                    (specialize-ruleY)
-                    (support-rule)
+(= (rb) (superpose ((support-rule)
                     (minsupport-rule)
                     (support-cnj-rule)
                     (ms-transitivity-rule)
