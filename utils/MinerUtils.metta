@@ -23,12 +23,25 @@
                 (add-atom &self (= (highsurp) $highsurp))
                 (get-universe-size $db))))
 
+(= (init-miner $db $ms $highsurp $target-link)
+    (superpose ((extract-valuation $db $target-link)
+                (add-atom &self (= (refdb) $db))
+                (add-atom &self (= (ms) (fromNumber $ms)))
+                (add-atom &self (= (highsurp) $highsurp))
+                (get-universe-size $db))))
+
 ;; Search for Triplets in DB 
 ;; collect valuation sets and generate specializations
 (= (extract-valuation $db)
-  (match $db ($link $x $y) 
+   (match $db ($link $x $y) 
     (superpose ((build-specialization ($link $x (VarIdx (S Z))))
                 (build-specialization ($link (VarIdx Z) $y))))))
+
+;; Given target link
+(= (extract-valuation $db $target-link)
+   (match $db ($target-link $x $y)
+    (superpose ((build-specialization ($target-link $x (VarIdx (S Z))))
+                (build-specialization ($target-link (VarIdx Z) $y))))))
 
 (= (build-specialization $sp)
    (case (match &specializations $sp $sp)
